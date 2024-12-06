@@ -1,0 +1,97 @@
+  exp_folder: ""
+  exp_name: "allhpa_ablations"
+  exp_mode: "rybg_448_nc8_contrast_vitb16_pool_fp32_supcon" 
+  log_wandb: true
+  num_workers: 16
+  pin_memory: false
+  data:
+    dataset: "HPASubCellDataset"
+    image_size: 448
+    train_remote_path: ""
+    val_remote_path: ""
+    test_remote_path: ""
+    args:
+      ssl_transform: true
+      protein_path: null 
+      n_cells: 8
+      mask_prob: 0.5
+      color_channels:
+        - "red"
+        - "yellow"
+        - "blue"
+        - "green"
+      normalize: "min_max"
+      return_cell_mask: False
+  model:
+    vit_model:
+      name: "ViTModel"
+      args:
+        hidden_size: 768
+        num_hidden_layers: 12
+        num_attention_heads: 12
+        intermediate_size: 3072
+        hidden_act: "gelu"
+        hidden_dropout_prob: 0.0
+        attention_probs_dropout_prob: 0.0
+        initializer_range: 0.02
+        layer_norm_eps: 1.e-12
+        image_size: 448
+        patch_size: 16
+        num_channels: 4
+        qkv_bias: true
+    ssl_model:
+      name: ContrastiveLoss
+      args:
+        projector:
+          name: "ProjectionHead"
+          args:
+            in_channels: 768
+            mlp_layers:
+              - 8192
+              - 8192
+              - 512
+        temperature: 0.1
+    supcon_model:
+      name: ContrastiveLoss
+      args:
+        projector:
+          name: "ProjectionHead"
+          args:
+            in_channels: 1536
+            mlp_layers:
+              - 8192
+              - 8192
+              - 512
+        temperature: 0.1
+    pool_model:
+      name:  "GatedAttentionPooler"
+      args:
+        dim: 768
+        int_dim: 512
+        num_heads: 2
+        dropout: 0.2
+    pl_args:
+      weight_ssl: 1.0
+      weight_supcon: 1.0
+      max_epochs: 300
+      init_lr: 1.e-4
+      weight_decay: 0.05
+      betas:
+        - 0.9
+        - 0.95
+      warmup_epochs: 5
+  train:
+      pl_module: "BaseSSL"
+      train_batch_size: 128
+      test_batch_size: 128
+      ckpt_path: "last.ckpt"
+  trainer:
+      gc_interval: 50
+      valid_every: 10
+      strategy: "ddp"
+      logging_interval: 50
+      checkpoint_interval: 50
+      precision: "32-true" # "bf16-mixed" # 
+  test:
+    tester: "MAETester"
+    model_path: "best_model.ckpt"

@@ -1,0 +1,74 @@
+
+exp_folder: ".local"
+exp_name: "allhpa_ablations"
+exp_mode: "rybg_448_nc8_mae_vitb16_fp32_mr0.5_objmr0.5"
+log_wandb: true
+num_workers: 16
+pin_memory: false
+data:
+  dataset: "HPASubCellDataset"
+  image_size: 448
+  train_remote_path: ""
+  val_remote_path: ""
+  test_remote_path: ""
+  args:
+    ssl_transform: true
+    protein_path: null 
+    n_cells: 8
+    mask_prob: 0.5
+    color_channels:
+      - "red"
+      - "yellow"
+      - "blue"
+      - "green"
+    normalize: "min_max"
+    return_cell_mask: True
+model:
+  mae_model:
+    name: "ViTMAEForPreTraining"
+    args:
+      hidden_size: 768
+      num_hidden_layers: 12
+      num_attention_heads: 12
+      intermediate_size: 3072
+      hidden_act: "gelu"
+      hidden_dropout_prob: 0.0
+      attention_probs_dropout_prob: 0.0
+      initializer_range: 0.02
+      layer_norm_eps: 1.e-12
+      image_size: 448
+      patch_size: 16
+      num_channels: 4
+      qkv_bias: True
+      decoder_num_attention_heads: 16
+      decoder_hidden_size: 512
+      decoder_num_hidden_layers: 8
+      decoder_intermediate_size: 2048
+      mask_ratio: 0.5
+      norm_pix_loss: True
+      object_mask_ratio: 0.5
+  pl_args:
+    max_epochs: 300
+    init_lr: 1.e-4
+    weight_decay: 0.05
+    betas:
+      - 0.9
+      - 0.95
+    warmup_epochs: 5
+train:
+    pl_module: "BaseMAE"
+    train_batch_size: 112
+    test_batch_size: 112
+    ckpt_path: "last.ckpt"
+trainer:
+    gc_interval: 50
+    valid_every: 10
+    strategy: "ddp"
+    logging_interval: 50
+    checkpoint_interval: 50
+    precision:  "32-true" # "bf16-mixed" # 
+test:
+  tester: "MAETester"
+  model_path: "best_model.ckpt"
+
+
