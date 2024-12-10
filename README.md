@@ -59,7 +59,7 @@ pip install -r requirements.txt
 ## Requirements
 ```
 torch>=2.1.2
-pytorch-lightning>=2.3
+pytorch-lightning>=2.3.4
 transformers>=4.41.0
 torchmetrics==1.3.0
 mosaicml-streaming==0.7.3
