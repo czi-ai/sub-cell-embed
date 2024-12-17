@@ -9,7 +9,7 @@ import seaborn as sns
 import colorcet as cc
 from sklearn.decomposition import NMF, PCA
 
-LOCATION_MAP = pd.read_csv("stats/location_group_mapping.csv")
+LOCATION_MAP = pd.read_csv("annotations/location_group_mapping.tsv", sep="\t")
 
 
 def get_display_image(input, color_channels):
