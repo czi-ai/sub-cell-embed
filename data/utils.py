@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn import preprocessing
 
-LOCATION_MAP = pd.read_csv("stats/location_group_mapping.csv")
+LOCATION_MAP = pd.read_csv("annotations/location_group_mapping.tsv", sep="\t")
 
 
 def standardize(im):

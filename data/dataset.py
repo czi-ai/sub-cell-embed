@@ -9,7 +9,7 @@ from streaming import StreamingDataset
 from torch import nn
 
 COLORS = ["red", "yellow", "blue", "green"]
-LOCATION_MAP = pd.read_csv("stats/location_group_mapping.csv")
+LOCATION_MAP = pd.read_csv("annotations/location_group_mapping.tsv", sep="\t")
 UNIQUE_CATS = LOCATION_MAP["Original annotation"].unique().tolist()
 UNIQUE_CATS.append("Negative")
 NUM_CLASSES = len(UNIQUE_CATS)
