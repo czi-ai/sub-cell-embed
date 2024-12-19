@@ -160,12 +160,5 @@ cython_debug/
 #.idea/
 ._*
 .DS_Store
-*.tsv
-stats/splits/
-stats/IF-image*
-stats/annotations/*
-.vscode/launch.json
-data_exploration/*
-.local/
-wandb/
-annotations/
+
+.vscode/
