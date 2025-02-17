@@ -29,16 +29,21 @@ subcell/
 │   ├── dataset.py
 │   └── get_datasets.py
 ├── models/
-│   ├── backbone.py
-│   ├── heads.py
-│   └── losses.py
-├── training/
-│   ├── trainer.py
-│   └── optimizer.py
+│   ├── lightning
+│   │   ├── base_mae.py
+│   │   ├── base_ssl.py
+│   │   ├── base_supervised.py
+│   │   ├── byol_ssl.py
+│   │   ├── contrast_byol_mae.py.py
+│   │   ├── contrast_mae.py
+│   └── attention_pooling.py
+│   └── ntxent.py
+│   └── object_aware_mae.py
+│   └── projectors.py
+│   └── vit.py
 ├── utils/
-│   ├── trainer.py
-│   └── optimizer.py
-└── train.py
+│   └── augmentations.py
+└── main_lightning.py
 
 ```
 
